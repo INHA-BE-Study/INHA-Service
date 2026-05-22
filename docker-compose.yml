@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: inhamatch-postgres
+    environment:
+      POSTGRES_DB: inhamatch
+      POSTGRES_USER: ${DB_USERNAME:-inhamatch}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-inhamatch}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-inhamatch} -d inhamatch"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
