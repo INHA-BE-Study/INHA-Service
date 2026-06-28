@@ -1,40 +1,20 @@
-HELP.md
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### IntelliJ IDEA ###
-.idea
-*.iws
+### IntelliJ IDEA / IDE (개인 설정 — 공유 금지) ###
+.idea/
 *.iml
+*.iws
 *.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+### Gradle (로컬 캐시) ###
+.gradle/
 
-### VS Code ###
-.vscode/
+### OS ###
+.DS_Store
+Thumbs.db
 
-### .env
+### 환경변수/비밀키 (하위 프로젝트 공통 안전망 — backend/frontend 어디든) ###
 .env
+.env.local
+.env.*.local
+# 템플릿은 커밋 허용
+!.env.example
+!.env.sample
