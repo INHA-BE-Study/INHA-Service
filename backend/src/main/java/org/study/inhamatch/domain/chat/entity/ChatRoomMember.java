@@ -51,10 +51,23 @@ public class ChatRoomMember {
     @Column(name = "last_read_message_id")
     private Long lastReadMessageId;
 
+    @Column(name = "left_at")
+    private LocalDateTime leftAt;
+
     @PrePersist
     protected void prePersist() {
         if (joinedAt == null) {
             joinedAt = LocalDateTime.now();
+        }
+    }
+
+    public boolean hasLeft() {
+        return leftAt != null;
+    }
+
+    public void leave() {
+        if (this.leftAt == null) {
+            this.leftAt = LocalDateTime.now();
         }
     }
 }

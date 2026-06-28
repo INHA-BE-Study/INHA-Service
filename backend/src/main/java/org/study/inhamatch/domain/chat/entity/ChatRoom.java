@@ -42,6 +42,9 @@ public class ChatRoom {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "closed_at")
+    private LocalDateTime closedAt;
+
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ChatRoomMember> members = new ArrayList<>();
 
@@ -52,6 +55,16 @@ public class ChatRoom {
     protected void prePersist() {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
+        }
+    }
+
+    public boolean isClosed() {
+        return closedAt != null;
+    }
+
+    public void close() {
+        if (this.closedAt == null) {
+            this.closedAt = LocalDateTime.now();
         }
     }
 }
