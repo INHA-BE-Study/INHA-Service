@@ -15,6 +15,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+
     private final UserRepository userRepository;
 
     @Override
@@ -25,15 +26,22 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String email = (String) attributes.get("email");
 
-        if (email == null || !email.endsWith("@inha.ac.kr")) {
-            throw new OAuth2AuthenticationException("인하대학교 이메일(@inha.ac.kr)만 가입 가능합니다.");
+        if (email == null || !email.endsWith("@inha.edu")) {
+            throw new OAuth2AuthenticationException("인하대학교 이메일(@inha.edu)만 가입 가능합니다.");
         }
 
-        User user = userRepository.findByEmail(email)
+        userRepository.findByEmail(email).ifPresent(user -> {
+            if (user.isDeleted()) {
+                throw new OAuth2AuthenticationException("탈퇴한 계정입니다.");
+            }
+        });
+
+        userRepository.findByEmail(email)
                 .orElseGet(() -> {
                     String tempStudentId = email.split("@")[0];
                     return userRepository.save(User.create(email, tempStudentId));
                 });
+
         return oAuth2User;
     }
 }
