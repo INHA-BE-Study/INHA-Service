@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @Component
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class OAuth2AuthenticationFailureHandler implements AuthenticationFailure
         String redirectUrl = UriComponentsBuilder
                 .fromUriString(oauth2Properties.getRedirectUri())
                 .queryParam("error", message)
+                .encode(StandardCharsets.UTF_8)
                 .build()
                 .toUriString();
 

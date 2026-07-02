@@ -15,6 +15,7 @@ import org.study.inhamatch.domain.auth.service.RefreshTokenService;
 import org.study.inhamatch.global.jwt.JwtTokenProvider;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @Component
 @RequiredArgsConstructor
@@ -52,6 +53,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                 .fromUriString(oauth2Properties.getRedirectUri())
                 .queryParam("token", accessToken)
                 .queryParam("refreshToken", refreshToken.getToken())
+                .encode(StandardCharsets.UTF_8)
                 .build()
                 .toUriString();
 
@@ -62,6 +64,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         String redirectUrl = UriComponentsBuilder
                 .fromUriString(oauth2Properties.getRedirectUri())
                 .queryParam("error", message)
+                .encode(StandardCharsets.UTF_8)
                 .build()
                 .toUriString();
 
