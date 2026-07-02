@@ -47,4 +47,4 @@
 
 ## 결정 완료
 
-_(아직 없음)_
+- ✅ **가입 허용 이메일 도메인** (2026-07-02): `@inha.ac.kr` 뿐 아니라 `@inha.edu`도 함께 허용. 실제 인하대 구글 워크스페이스 계정이 `@inha.edu`로 발급되는 케이스가 확인되어 `CustomOAuth2UserService`에서 두 도메인 모두 허용하도록 수정 (`feat/auth`). [service-policy.md](service-policy.md) §1.1, [conventions.md](conventions.md), [domain-design.md](domain-design.md), 루트 `CLAUDE.md`도 함께 갱신 완료.

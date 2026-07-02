@@ -66,7 +66,7 @@ org.study.inhamatch
 - 권한은 `enum Role { USER, ADMIN }` 으로 표현한다.
   - 각 값은 Spring Security 키를 보유: `USER → ROLE_USER`, `ADMIN → ROLE_ADMIN`.
 - 관리자/보호 기능은 **`@PreAuthorize`**로 통제한다.
-- OAuth2 로그인은 `@inha.ac.kr` 도메인만 허용한다(`CustomOAuth2UserService`).
+- OAuth2 로그인은 `@inha.ac.kr` 또는 `@inha.edu` 도메인만 허용한다(`CustomOAuth2UserService`).
 
 > 참고: 기획서는 enum명을 `UserRole`로 표기했으나, **실제 코드의 enum명은 `Role`**이다(§9 정합성 참조).
 
