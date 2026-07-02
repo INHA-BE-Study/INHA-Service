@@ -26,8 +26,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String email = (String) attributes.get("email");
 
-        if (email == null || !email.endsWith("@inha.edu")) {
-            throw new OAuth2AuthenticationException("인하대학교 이메일(@inha.edu)만 가입 가능합니다.");
+        if (email == null || !email.endsWith("@inha.ac.kr")) {
+            throw new OAuth2AuthenticationException("인하대학교 이메일(@inha.ac.kr)만 가입 가능합니다.");
         }
 
         userRepository.findByEmail(email).ifPresent(user -> {

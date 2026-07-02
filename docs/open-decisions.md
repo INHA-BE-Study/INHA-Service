@@ -32,9 +32,9 @@
 | B4 | **계층 명칭 / dto** | `entity`(실제) / `domain`(기획) · `dto` 폴더 미생성 | 도메인 모델 계층 명칭 확정, DTO 폴더 신설 필요 | 전체 |
 | B5 | **권한 enum명** | `Role`(실제) / `UserRole`(기획) | 보안 코드 전반에서 참조되는 타입명 통일 | Auth, 전체 |
 | B6 | **프론트 언어/상태관리** | JavaScript(현재) / TypeScript + Zustand(목표) | 목표 스택(TS+Zustand) 전환 시점·범위 결정 | 프론트엔드 |
-| B7 | **`User` 엔티티 필드 보강** | 현재 email/studentId/role/createdAt/deletedAt만 존재 | 정책상 **성별(필수 선택)·학년**이 필요하나 엔티티에 없음. 재학생 검증/이성 매칭의 전제 데이터 | Auth, Matching |
+| B7 | ✅ **`User` 엔티티 필드 보강** | (해결됨) `grade`, `gender` 필드 추가 및 `completeSignup(grade, gender)`로 가입 완료 플로우 구현됨 (`User.java`) | ~~정책상 성별(필수 선택)·학년이 필요하나 엔티티에 없음~~ → 해결 | Auth, Matching |
 
-> B 섹션은 코드 변경을 수반하므로 이번 "문서 셋업" 작업 범위 밖이다. 결정 후 별도 작업으로 정렬한다.
+> B 섹션은 코드 변경을 수반하므로 이번 "문서 셋업" 작업 범위 밖이다. 결정 후 별도 작업으로 정렬한다. (B7은 `feat/auth` 브랜치에서 이미 구현되어 해결됨으로 갱신)
 
 ---
 
