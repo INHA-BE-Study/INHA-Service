@@ -4,6 +4,9 @@
 *.iws
 *.ipr
 
+### Claude Code (개인 도구 설정 — 팀 전원이 쓰지 않으므로 공유 안 함) ###
+.claude/
+
 ### Gradle (로컬 캐시) ###
 .gradle/
 
