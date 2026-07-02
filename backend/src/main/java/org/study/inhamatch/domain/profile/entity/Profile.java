@@ -40,6 +40,8 @@ public class Profile {
     @Enumerated(EnumType.STRING)
     private DrinkingStatus drinkingStatus;
 
+    private String photoKey;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -62,5 +64,19 @@ public class Profile {
         this.smokingStatus = smokingStatus;
         this.drinkingStatus = drinkingStatus;
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void updatePhotoKey(String photoKey) {
+        this.photoKey = photoKey;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void removePhotoKey() {
+        this.photoKey = null;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public boolean hasPhoto() {
+        return photoKey != null;
     }
 }

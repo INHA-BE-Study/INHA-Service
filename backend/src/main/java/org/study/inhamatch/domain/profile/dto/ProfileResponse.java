@@ -15,9 +15,10 @@ public record ProfileResponse(
         LoveStyle loveStyle,
         SmokingStatus smokingStatus,
         DrinkingStatus drinkingStatus,
-        List<String> tags
+        List<String> tags,
+        String photoUrl
 ) {
-    public static ProfileResponse from(Profile profile, List<ProfileTag> tags) {
+    public static ProfileResponse from(Profile profile, List<ProfileTag> tags, String photoUrl) {
         return new ProfileResponse(
                 profile.getUserId(),
                 profile.getBio(),
@@ -25,7 +26,8 @@ public record ProfileResponse(
                 profile.getLoveStyle(),
                 profile.getSmokingStatus(),
                 profile.getDrinkingStatus(),
-                tags.stream().map(ProfileTag::getTagValue).toList()
+                tags.stream().map(ProfileTag::getTagValue).toList(),
+                photoUrl
         );
     }
 }

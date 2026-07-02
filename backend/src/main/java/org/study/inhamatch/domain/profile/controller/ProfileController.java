@@ -3,11 +3,15 @@ package org.study.inhamatch.domain.profile.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.study.inhamatch.domain.profile.dto.ProfileResponse;
 import org.study.inhamatch.domain.profile.dto.ProfileUpdateRequest;
 import org.study.inhamatch.domain.profile.service.ProfileService;
@@ -31,5 +35,19 @@ public class ProfileController {
             @AuthenticationPrincipal String email,
             @RequestBody ProfileUpdateRequest request) {
         return ResponseEntity.ok(ApiResponse.success(profileService.updateProfile(email, request)));
+    }
+
+    @PostMapping("/me/photo")
+    public ResponseEntity<ApiResponse<ProfileResponse>> uploadPhoto(
+            @AuthenticationPrincipal String email,
+            @RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(ApiResponse.success(profileService.uploadPhoto(email, file)));
+    }
+
+    @DeleteMapping("/me/photo")
+    public ResponseEntity<ApiResponse<Void>> deletePhoto(
+            @AuthenticationPrincipal String email) {
+        profileService.deletePhoto(email);
+        return ResponseEntity.ok(ApiResponse.success("프로필 사진이 삭제되었습니다.", null));
     }
 }
