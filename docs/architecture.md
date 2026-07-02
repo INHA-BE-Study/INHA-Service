@@ -64,6 +64,8 @@
 
 `.env`는 커밋 금지(루트 `.gitignore`에서 차단, `.env.example`/`.env.sample` 템플릿만 허용).
 
+> ⚠️ 현재 `backend/.env`에는 **실제 Google OAuth·JWT 시크릿이 평문**으로 들어있다. 절대 커밋/공유 금지. (`.env.example` 템플릿은 아직 없음 — 추후 placeholder 템플릿 추가 권장.)
+
 | 변수 | 용도 | 기본값 |
 |---|---|---|
 | `DB_USERNAME` | PostgreSQL 사용자 | `inhamatch` |
@@ -79,12 +81,24 @@
 
 ## 4. 로컬 실행 개요
 
-> 코드/스크립트는 본 문서 셋업 범위 밖. 아래는 현재 레포 구성으로부터의 **참고 흐름**이다.
+현재 레포 구성 기준 로컬 실행 명령이다(작업 디렉터리는 레포 루트).
 
-1. `backend/docker-compose.yml`로 PostgreSQL 기동 (호스트 5433).
-2. `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` 등 환경변수 설정.
-3. 백엔드 Spring Boot 앱 실행 (8080).
-4. 프론트엔드 Vite dev 서버 실행.
+```bash
+# 1. PostgreSQL 기동 (호스트 5433 → 컨테이너 5432)
+cd backend && docker compose up -d
+
+# 2. 환경변수: backend/.env 설정 (§3 표 참고)
+
+# 3. 백엔드 실행 (8080)
+cd backend && ./gradlew bootRun        # PowerShell: .\gradlew.bat bootRun
+
+# 4. 프론트 dev 서버 (Vite)
+cd frontend && npm install && npm run dev
+```
+
+- 테스트: `cd backend && ./gradlew test`
+- 빌드: `cd backend && ./gradlew build`
+- 프론트: `npm run build`(프로덕션 번들) / `npm run lint`(ESLint)
 
 서버 포트: **8080** / DB 포트(로컬): **5433**.
 
