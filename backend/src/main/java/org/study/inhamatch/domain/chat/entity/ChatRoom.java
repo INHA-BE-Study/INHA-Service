@@ -9,11 +9,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,17 +26,15 @@ import java.util.List;
         indexes = @Index(name = "idx_chat_rooms_match_id", columnList = "match_id")
 )
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class ChatRoom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * 매칭 결과 기준 채팅방 식별(1:1 기준 고유값). 매치 도메인이 생기면 연관으로 바꿀 수 있음.
-     */
     @Column(name = "match_id", unique = true)
     private Long matchId;
 
@@ -46,16 +45,18 @@ public class ChatRoom {
     private LocalDateTime closedAt;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<ChatRoomMember> members = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<ChatMessage> messages = new ArrayList<>();
 
-    @PrePersist
-    protected void prePersist() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
+    public static ChatRoom create(Long matchId) {
+        return ChatRoom.builder()
+                .matchId(matchId)
+                .createdAt(LocalDateTime.now())
+                .build();
     }
 
     public boolean isClosed() {

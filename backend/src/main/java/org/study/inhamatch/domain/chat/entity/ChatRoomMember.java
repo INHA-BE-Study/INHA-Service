@@ -9,12 +9,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -30,8 +31,9 @@ import java.time.LocalDateTime;
         }
 )
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class ChatRoomMember {
 
     @Id
@@ -54,11 +56,12 @@ public class ChatRoomMember {
     @Column(name = "left_at")
     private LocalDateTime leftAt;
 
-    @PrePersist
-    protected void prePersist() {
-        if (joinedAt == null) {
-            joinedAt = LocalDateTime.now();
-        }
+    public static ChatRoomMember create(ChatRoom room, Long userId) {
+        return ChatRoomMember.builder()
+                .room(room)
+                .userId(userId)
+                .joinedAt(LocalDateTime.now())
+                .build();
     }
 
     public boolean hasLeft() {
@@ -69,5 +72,9 @@ public class ChatRoomMember {
         if (this.leftAt == null) {
             this.leftAt = LocalDateTime.now();
         }
+    }
+
+    public void markRead(Long messageId) {
+        this.lastReadMessageId = messageId;
     }
 }

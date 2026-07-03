@@ -12,11 +12,12 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -26,8 +27,9 @@ import java.time.LocalDateTime;
         indexes = @Index(name = "idx_chat_messages_room_created", columnList = "chat_room_id, created_at")
 )
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class ChatMessage {
 
     @Id
@@ -47,18 +49,18 @@ public class ChatMessage {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 32)
-    private ChatMessageType type = ChatMessageType.TEXT;
+    private ChatMessageType type;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @PrePersist
-    protected void prePersist() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
-        if (type == null) {
-            type = ChatMessageType.TEXT;
-        }
+    public static ChatMessage create(ChatRoom room, Long senderUserId, String body, ChatMessageType type) {
+        return ChatMessage.builder()
+                .room(room)
+                .senderUserId(senderUserId)
+                .body(body)
+                .type(type != null ? type : ChatMessageType.TEXT)
+                .createdAt(LocalDateTime.now())
+                .build();
     }
 }
