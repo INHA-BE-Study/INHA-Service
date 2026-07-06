@@ -56,11 +56,11 @@
 🔸 표시는 [open-decisions.md](open-decisions.md)에 묶인 미결정 사항이다.
 
 ### 3.1 Auth — 인증/인가
-**책임:** Google OAuth2 로그인(`@inha.ac.kr`만 허용), 학번·학년 검증(졸업생 차단), 성별 선택 입력, JWT 액세스 토큰 발급 및 리프레시 재발급, 관리자 권한 관리.
+**책임:** Google OAuth2 로그인(`@inha.ac.kr` 또는 `@inha.edu`만 허용), 학번·학년 검증(졸업생 차단), 성별 선택 입력, JWT 액세스 토큰 발급 및 리프레시 재발급, 관리자 권한 관리.
 
 | 엔티티 | 책임 | 핵심 속성(설계 기준) |
 |---|---|---|
-| `User` | 서비스 사용자 | id, email(`@inha.ac.kr`), studentId(학번), 학년, **성별**, `Role`, createdAt, deletedAt(soft delete) |
+| `User` | 서비스 사용자 | id, email(`@inha.ac.kr`/`@inha.edu`), studentId(학번), 학년, **성별**, `Role`, createdAt, deletedAt(soft delete) |
 | `RefreshToken` | 리프레시 토큰 보관/재발급 | id, userId, token, 만료시각 |
 
 - 권한: `enum Role { USER, ADMIN }` (각각 `ROLE_USER`, `ROLE_ADMIN` 키 보유) + `@PreAuthorize`.

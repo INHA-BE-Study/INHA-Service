@@ -9,21 +9,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-
 @Entity
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder(access = AccessLevel.PRIVATE)
-
 public class User {
 
     @Id
@@ -40,19 +34,59 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus status;
+
+    private Integer grade;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime deletedAt;
 
-    public static User create(String email, String studentId){
-        return User.builder()
-                .email(email)
-                .studentId(studentId)
-                .role(Role.USER)
-                .createdAt(LocalDateTime.now())
-                .deletedAt(null)
-                .build();
+    private User(String email, String studentId, Role role, UserStatus status,
+                   Integer grade, Gender gender, LocalDateTime createdAt, LocalDateTime deletedAt) {
+        this.email = email;
+        this.studentId = studentId;
+        this.role = role;
+        this.status = status;
+        this.grade = grade;
+        this.gender = gender;
+        this.createdAt = createdAt;
+        this.deletedAt = deletedAt;
     }
 
+    public static User create(String email, String studentId) {
+        return new User(
+                email,
+                studentId,
+                Role.USER,
+                UserStatus.PENDING,
+                null,
+                null,
+                LocalDateTime.now(),
+                null
+        );
+    }
+
+    public void completeSignup(Integer grade, Gender gender) {
+        if (this.status == UserStatus.ACTIVE) {
+            throw new IllegalStateException("이미 가입이 완료된 사용자입니다.");
+        }
+        this.grade = grade;
+        this.gender = gender;
+        this.status = UserStatus.ACTIVE;
+    }
+
+    public void softDelete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public boolean isDeleted() {
+        return deletedAt != null;
+    }
 }
