@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -37,31 +39,36 @@ public class MatchingScheduler {
     }
 
     private void processMutualRequests(List<MatchRequest> requests) {
-        List<Long> requestUserIds = requests.stream()
-                .map(MatchRequest::getUserId)
-                .toList();
+        Set<Long> matchedUserIds = new HashSet<>();
 
         for (MatchRequest request : requests) {
+            Long userId = request.getUserId();
+
+            if (matchedUserIds.contains(userId)) continue;
             if (request.getStatus() != RequestStatus.PENDING) continue;
 
-            // 상대방도 요청했는지 확인
-            // 하드 필터링 (이성, 차단 상대 등) - Report 개발 후 추가
-            Long matchedUserId = requestUserIds.stream()
-                    .filter(id -> !id.equals(request.getUserId()))
+            MatchRequest partner = requests.stream()
+                    .filter(r -> !r.getUserId().equals(userId))
+                    .filter(r -> r.getStatus() == RequestStatus.PENDING)
+                    .filter(r -> !matchedUserIds.contains(r.getUserId()))
                     .findFirst()
                     .orElse(null);
 
-            if (matchedUserId == null) continue;
+            if (partner == null) continue;
 
             matchRepository.save(
                     Match.builder()
-                            .userAId(request.getUserId())
-                            .userBId(matchedUserId)
+                            .userAId(userId)
+                            .userBId(partner.getUserId())
                             .matchType(MatchType.MUTUAL_REQUEST)
                             .build()
             );
 
             request.updateStatus(RequestStatus.MATCHED);
+            partner.updateStatus(RequestStatus.MATCHED);
+
+            matchedUserIds.add(userId);
+            matchedUserIds.add(partner.getUserId());
         }
     }
 

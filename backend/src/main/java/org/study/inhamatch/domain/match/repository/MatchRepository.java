@@ -12,7 +12,8 @@ import java.util.Optional;
 public interface MatchRepository extends JpaRepository<Match, Long> {
 
     // 현재 활성 매칭 있는지 체크 (채팅방 있는 사람 필터링)
-    boolean existsByUserAIdOrUserBIdAndStatus(Long userAId, Long userBId, MatchStatus status);
+    @Query("SELECT COUNT(m) > 0 FROM Match m WHERE (m.userAId = :userId OR m.userBId = :userId) AND m.status IN :statuses")
+    boolean existsByUserIdAndStatusIn(@Param("userId") Long userId, @Param("statuses") List<MatchStatus> statuses);
 
     // 기매칭 상대 조회 (하드 필터링용)
     @Query("SELECT m FROM Match m WHERE (m.userAId = :userId OR m.userBId = :userId) AND m.status = :status")
