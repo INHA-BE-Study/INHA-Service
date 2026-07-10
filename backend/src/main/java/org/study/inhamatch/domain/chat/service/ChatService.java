@@ -21,8 +21,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class
-ChatService {
+public class ChatService implements ChatRoomCreator, ChatRoomExiter {
 
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
