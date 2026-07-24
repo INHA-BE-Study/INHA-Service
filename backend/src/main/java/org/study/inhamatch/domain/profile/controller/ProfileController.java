@@ -1,5 +1,6 @@
 package org.study.inhamatch.domain.profile.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,7 +34,7 @@ public class ProfileController {
     @PutMapping("/me")
     public ResponseEntity<ApiResponse<ProfileResponse>> updateProfile(
             @AuthenticationPrincipal String email,
-            @RequestBody ProfileUpdateRequest request) {
+            @Valid @RequestBody ProfileUpdateRequest request) {
         return ResponseEntity.ok(ApiResponse.success(profileService.updateProfile(email, request)));
     }
 
